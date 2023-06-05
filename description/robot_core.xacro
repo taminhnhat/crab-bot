@@ -3,6 +3,21 @@
 
     <xacro:include filename="inertial_macros.xacro" />
 
+    <xacro:property name="chassis_length" value="0.22"/>
+    <xacro:property name="chassis_width" value="0.15"/>
+    <xacro:property name="chassis_height" value="0.095"/>
+    <xacro:property name="chassis_mass" value="1.0"/>
+    <xacro:property name="wheel_radius" value="0.048"/>
+    <xacro:property name="wheel_thickness" value="0.026"/>
+    <xacro:property name="wheel_mass" value="0.05"/>
+    <xacro:property name="wheel_offset_x" value="0.073"/>
+    <xacro:property name="wheel_offset_y" value="0.1"/>
+    <xacro:property name="wheel_offset_z" value="0.01"/>
+    <xacro:property name="caster_wheel_radius" value="0.048"/>
+    <xacro:property name="caster_wheel_mass" value="0.01"/>
+    <xacro:property name="caster_wheel_offset_x" value="0.075"/>
+    <xacro:property name="caster_wheel_offset_z" value="${wheel_offset_z - wheel_radius + caster_wheel_radius}"/>
+
     <material name="white">
         <color rgba="1 1 1 1"/>
     </material>
@@ -51,7 +66,7 @@
                 <box size="0.24 0.16 0.1"/>
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.5" x="0.24" y="16" z="0.1">
+        <xacro:inertial_box mass="2.0" x="0.24" y="16" z="0.1">
             <origin xyz="0.12 0 0.05" rpy="0 0 0"/>
         </xacro:inertial_box>
     </link>
@@ -78,10 +93,10 @@
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="0.048" length="0.036"/>
+                <sphere radius="0.048"/>
             </geometry>
         </collision>
-        <xacro:inertial_cylinder mass="0.1" length="0.036" radius="0.048">
+        <xacro:inertial_cylinder mass="0.02" length="0.036" radius="0.048">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_cylinder>
     </link>
@@ -108,10 +123,10 @@
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="0.048" length="0.036"/>
+                <sphere radius="0.048"/>
             </geometry>
         </collision>
-        <xacro:inertial_cylinder mass="0.1" length="0.036" radius="0.048">
+        <xacro:inertial_cylinder mass="0.02" length="0.036" radius="0.048">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_cylinder>
     </link>
@@ -126,6 +141,7 @@
         <parent link="chassis"/>
         <child link="caster_wheel"/>
         <origin xyz="0.24 0 0"/>
+        <axis xyz="1 1 1"/>
     </joint>
     <link name="caster_wheel">
         <visual>
@@ -139,7 +155,7 @@
                 <sphere radius="0.048"/>
             </geometry>
         </collision>
-        <xacro:inertial_sphere mass="0.1" radius="0.048">
+        <xacro:inertial_sphere mass="0.02" radius="0.048">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_sphere>
     </link>
