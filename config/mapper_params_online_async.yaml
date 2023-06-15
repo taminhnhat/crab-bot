@@ -4,7 +4,7 @@ slam_toolbox:
     # Plugin params
     solver_plugin: solver_plugins::CeresSolver
     ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
-    ceres_preconditioner: SCHUR_JACOBI
+    ceres_preconditioner: SCHUR_JACOBI 
     ceres_trust_strategy: LEVENBERG_MARQUARDT
     ceres_dogleg_type: TRADITIONAL_DOGLEG
     ceres_loss_function: None
@@ -12,16 +12,16 @@ slam_toolbox:
     # ROS Parameters
     odom_frame: odom
     map_frame: map
-    base_frame: base_footprint
+    base_frame: base_link
     scan_topic: /scan
-    mode: mapping #localization
+    mode: localization
 
     # if you'd like to immediately start continuing a map at a given pose
     # or at the dock, but they are mutually exclusive, if pose is given
     # will use pose
-    #map_file_name: test_steve
+    map_file_name: /home/nhat/dev-ws/my_map_serial
     # map_start_pose: [0.0, 0.0, 0.0]
-    #map_start_at_dock: true
+    map_start_at_dock: true
 
     debug_logging: false
     throttle_scans: 1
