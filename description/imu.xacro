@@ -8,13 +8,13 @@
     <link name="imu_link">
         <visual>
             <geometry>
-                <box size="0.1 0.1 0.1"/>
+                <box size="0.02 0.02 0.02"/>
             </geometry>
         </visual>
 
         <collision>
             <geometry>
-                <box size="0.1 0.1 0.1"/>
+                <box size="0.02 0.02 0.02"/>
             </geometry>
         </collision>
 
