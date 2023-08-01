@@ -4,9 +4,9 @@ from ament_index_python.packages import get_package_share_directory
 
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, TimerAction
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessStart
 
@@ -19,19 +19,39 @@ def generate_launch_description():
     # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
 
     package_name = 'crab_bot'  # <--- CHANGE ME
+    use_sim_time = LaunchConfiguration("use_sim_time")
+    use_ros2_control = LaunchConfiguration("use_ros2_control")
+    pkg_share = get_package_share_directory(package_name)
+    default_rviz_config_path = os.path.join(pkg_share, 'config/main.rviz')
 
-    rsp = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory(
-                package_name), 'launch', 'rsp.launch.py'
-        )]), launch_arguments={'use_sim_time': 'false', 'use_ros2_control': 'true'}.items()
+    #
+    # robot state publisher
+    #
+    robot_description_content = Command([
+        PathJoinSubstitution([FindExecutable(name="xacro")]),
+        " ",
+        PathJoinSubstitution([pkg_share, "description", "robot.urdf.xacro"]),
+        " use_ros2_control:=",
+        use_ros2_control,
+        ' use_sim_time:=',
+        use_sim_time
+    ])
+
+    robot_description = {'robot_description': robot_description_content}
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[robot_description]
     )
 
-    xbox = IncludeLaunchDescription(
+    #
+    # rviz
+    #
+    gamepad = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory(
-                package_name), 'launch', 'joystick.launch.py'
-        )])
+            pkg_share, 'launch', 'joystick.launch.py'
+        )]), launch_arguments={'use_sim_time': use_sim_time}.items()
     )
 
     rviz = Node(
@@ -42,8 +62,11 @@ def generate_launch_description():
         arguments=['-d', LaunchConfiguration('rvizconfig')],
     )
 
-    twist_mux_params = os.path.join(get_package_share_directory(
-        package_name), 'config', 'twist_mux_topics.yaml')
+    #
+    # twist mux
+    #
+    twist_mux_params = os.path.join(
+        pkg_share, 'config', 'twist_mux_topics.yaml')
     twist_mux = Node(
         package='twist_mux',
         executable='twist_mux',
@@ -54,14 +77,13 @@ def generate_launch_description():
     robot_description = Command(
         ['ros2 param get --hide-type /robot_state_publisher robot_description'])
 
-    controller_params_file = os.path.join(get_package_share_directory(
-        package_name), 'config', 'my_controllers.yaml')
+    controller_params_file = os.path.join(
+        pkg_share, 'config', 'my_controllers.yaml')
 
     controller_manager = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[{'robot_description': robot_description},
-                    controller_params_file]
+        parameters=[robot_description, controller_params_file]
     )
 
     delayed_controller_manager = TimerAction(
@@ -111,8 +133,14 @@ def generate_launch_description():
 
     # Launch them all!
     return LaunchDescription([
-        rsp,
-        xbox,
+        DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
+                              description='Absolute path to rviz config file'),
+        DeclareLaunchArgument(name='use_sim_time', default_value='false',
+                             description='Flag to enable use_sim_time'),
+        DeclareLaunchArgument(name='use_ros2_control', default_value='true',
+                             description='Flag to enable use_ros2_control'),
+        robot_state_publisher,
+        gamepad,
         twist_mux,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
