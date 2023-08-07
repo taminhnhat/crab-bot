@@ -15,13 +15,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
-    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
-
-    package_name = 'crab_bot'  # <--- CHANGE ME
-    use_sim_time = LaunchConfiguration("use_sim_time")
     use_ros2_control = LaunchConfiguration("use_ros2_control")
-    pkg_share = get_package_share_directory(package_name)
+    pkg_share = get_package_share_directory("crab_bot")
     default_rviz_config_path = os.path.join(pkg_share, 'config/main.rviz')
 
     #
@@ -31,29 +26,29 @@ def generate_launch_description():
         PathJoinSubstitution([FindExecutable(name="xacro")]),
         " ",
         PathJoinSubstitution([pkg_share, "description", "robot.urdf.xacro"]),
-        " use_ros2_control:=",
-        use_ros2_control,
-        ' use_sim_time:=',
-        use_sim_time
+        " use_ros2_control:=true",
+        " use_sim:=false",
     ])
 
     robot_description = {'robot_description': robot_description_content}
-    robot_state_pub_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        output='screen',
-        parameters=[robot_description]
-    )
-
-    controller_params_file = PathJoinSubstitution([
-        pkg_share, 'config', 'my_controllers.yaml'
-    ])
+    controller_params_file = PathJoinSubstitution(
+        [pkg_share, 'config', 'robot_controllers.yaml'])
 
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[robot_description, controller_params_file],
         output="both",
+    )
+
+    robot_state_pub_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[robot_description],
+        # remappings=[
+        #     ("/diff_drive_controller/cmd_vel_unstamped", "/cmd_vel"),
+        # ],
     )
 
     joint_state_broadcaster_spawner_node = Node(
@@ -94,7 +89,7 @@ def generate_launch_description():
     joy_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             pkg_share, 'launch', 'joystick.launch.py'
-        )]), launch_arguments={'use_sim_time': use_sim_time}.items()
+        )]), launch_arguments={'use_sim_time': 'false'}.items()
     )
 
     twist_mux_params = os.path.join(
@@ -107,18 +102,17 @@ def generate_launch_description():
     )
 
     # Launch them all!
+    # ld = LaunchDescription()
     return LaunchDescription([
         DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
                               description='Absolute path to rviz config file'),
-        DeclareLaunchArgument(name='use_sim_time', default_value='false',
-                             description='Flag to enable use_sim_time'),
         DeclareLaunchArgument(name='use_ros2_control', default_value='true',
                              description='Flag to enable use_ros2_control'),
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner_node,
+        delayed_robot_controller_spawner,
         # delay_rviz_after_joint_state_broadcaster_spawner,
-        # delayed_robot_controller_spawner,
-        # joy_node,
-        # twist_mux_node,
+        joy_node,
+        twist_mux_node,
     ])

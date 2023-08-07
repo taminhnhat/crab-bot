@@ -19,38 +19,38 @@
  * library cannot have, but the consuming code must have inorder to link.
  */
 
-#ifndef CRABBOT_INTERFACE__VISIBILITY_CONTROL_H_
-#define CRABBOT_INTERFACE__VISIBILITY_CONTROL_H_
+#ifndef DIFFDRIVE_ARDUINO__VISIBILITY_CONTROL_H_
+#define DIFFDRIVE_ARDUINO__VISIBILITY_CONTROL_H_
 
 // This logic was borrowed (then namespaced) from the examples on the gcc wiki:
 //     https://gcc.gnu.org/wiki/Visibility
 
 #if defined _WIN32 || defined __CYGWIN__
 #ifdef __GNUC__
-#define CRABBOT_INTERFACE_EXPORT __attribute__((dllexport))
-#define CRABBOT_INTERFACE_IMPORT __attribute__((dllimport))
+#define DIFFDRIVE_ARDUINO_EXPORT __attribute__((dllexport))
+#define DIFFDRIVE_ARDUINO_IMPORT __attribute__((dllimport))
 #else
-#define CRABBOT_INTERFACE_EXPORT __declspec(dllexport)
-#define CRABBOT_INTERFACE_IMPORT __declspec(dllimport)
+#define DIFFDRIVE_ARDUINO_EXPORT __declspec(dllexport)
+#define DIFFDRIVE_ARDUINO_IMPORT __declspec(dllimport)
 #endif
-#ifdef CRABBOT_INTERFACE_BUILDING_DLL
-#define CRABBOT_INTERFACE_PUBLIC CRABBOT_INTERFACE_EXPORT
+#ifdef DIFFDRIVE_ARDUINO_BUILDING_DLL
+#define DIFFDRIVE_ARDUINO_PUBLIC DIFFDRIVE_ARDUINO_EXPORT
 #else
-#define CRABBOT_INTERFACE_PUBLIC CRABBOT_INTERFACE_IMPORT
+#define DIFFDRIVE_ARDUINO_PUBLIC DIFFDRIVE_ARDUINO_IMPORT
 #endif
-#define CRABBOT_INTERFACE_PUBLIC_TYPE CRABBOT_INTERFACE_PUBLIC
-#define CRABBOT_INTERFACE_LOCAL
+#define DIFFDRIVE_ARDUINO_PUBLIC_TYPE DIFFDRIVE_ARDUINO_PUBLIC
+#define DIFFDRIVE_ARDUINO_LOCAL
 #else
-#define CRABBOT_INTERFACE_EXPORT __attribute__((visibility("default")))
-#define CRABBOT_INTERFACE_IMPORT
+#define DIFFDRIVE_ARDUINO_EXPORT __attribute__((visibility("default")))
+#define DIFFDRIVE_ARDUINO_IMPORT
 #if __GNUC__ >= 4
-#define CRABBOT_INTERFACE_PUBLIC __attribute__((visibility("default")))
-#define CRABBOT_INTERFACE_LOCAL __attribute__((visibility("hidden")))
+#define DIFFDRIVE_ARDUINO_PUBLIC __attribute__((visibility("default")))
+#define DIFFDRIVE_ARDUINO_LOCAL __attribute__((visibility("hidden")))
 #else
-#define CRABBOT_INTERFACE_PUBLIC
-#define CRABBOT_INTERFACE_LOCAL
+#define DIFFDRIVE_ARDUINO_PUBLIC
+#define DIFFDRIVE_ARDUINO_LOCAL
 #endif
-#define CRABBOT_INTERFACE_PUBLIC_TYPE
+#define DIFFDRIVE_ARDUINO_PUBLIC_TYPE
 #endif
 
-#endif  // CRABBOT_INTERFACE__VISIBILITY_CONTROL_H_
+#endif  // DIFFDRIVE_ARDUINO__VISIBILITY_CONTROL_H_

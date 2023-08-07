@@ -13,10 +13,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
-    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
-
-    package_name = 'crab_bot'  # <--- CHANGE ME
+    package_name = 'crab_bot'
     use_sim_time = LaunchConfiguration("use_sim_time")
     use_ros2_control = LaunchConfiguration("use_ros2_control")
     pkg_share = get_package_share_directory(package_name)
@@ -25,7 +22,7 @@ def generate_launch_description():
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             pkg_share, 'launch', 'rsp.launch.py'
-        )]), launch_arguments={'use_sim_time': use_sim_time, 'use_ros2_control': use_ros2_control}.items()
+        )]), launch_arguments={'use_sim': 'true', 'use_ros2_control': use_ros2_control}.items()
     )
 
     gazebo_params_file = os.path.join(
@@ -35,8 +32,8 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
-        launch_arguments={'extra_gazebo_args': '--ros-args --params-file ' +
-                          gazebo_params_file + ' world:=' + gazebo_world_file}.items()
+        launch_arguments={
+            'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items()
     )
 
     gamepad = IncludeLaunchDescription(
@@ -59,34 +56,35 @@ def generate_launch_description():
         package='twist_mux',
         executable='twist_mux',
         parameters=[twist_mux_params, {'use_sim_time': use_sim_time}],
-        remappings=[('/cmd_vel_out', '/diff_cont/cmd_vel_unstamped')]
+        remappings=[
+            ('/cmd_vel_out', '/diffbot_base_controller/cmd_vel_unstamped')]
     )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
     spawn_entity = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
-        arguments=['-topic', 'robot_description', '-entity', 'my_bot'],
+        arguments=['-topic', 'robot_description', '-entity', 'crab_bot'],
         output='screen'
     )
 
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont"],
+        arguments=["diffbot_base_controller"],
     )
 
     joint_broad_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_broad"],
+        arguments=["joint_state_broadcaster"],
     )
 
     # Launch them all!
     return LaunchDescription([
         DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
                               description='Absolute path to rviz config file'),
-        DeclareLaunchArgument(name='use_ros2_control', default_value='false',
+        DeclareLaunchArgument(name='use_ros2_control', default_value='true',
                               description='Flag to enable use_ros2_control'),
         DeclareLaunchArgument(name='use_sim_time', default_value='true',
                               description='Flag to enable use_sim_time'),
@@ -97,5 +95,5 @@ def generate_launch_description():
         spawn_entity,
         diff_drive_spawner,
         joint_broad_spawner,
-        rviz
+        # rviz,
     ])
