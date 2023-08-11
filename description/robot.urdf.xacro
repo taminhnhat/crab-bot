@@ -11,6 +11,8 @@
             <xacro:include filename="ros2_control.simulation.xacro" />
         </xacro:if>
         <xacro:unless value="$(arg use_sim)">
+            <!-- <xacro:include filename="$(find crab_bot)/description/diffbot.ros2_control.xacro" />
+            <xacro:diffbot_ros2_control name="DiffBot" prefix="" /> -->
             <xacro:include filename="ros2_control.hardware.xacro" />
         </xacro:unless>
     </xacro:if>

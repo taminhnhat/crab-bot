@@ -15,7 +15,6 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    use_ros2_control = LaunchConfiguration("use_ros2_control")
     pkg_share = get_package_share_directory("crab_bot")
     default_rviz_config_path = os.path.join(pkg_share, 'config/main.rviz')
 
@@ -46,9 +45,9 @@ def generate_launch_description():
         executable='robot_state_publisher',
         output='screen',
         parameters=[robot_description],
-        # remappings=[
-        #     ("/diff_drive_controller/cmd_vel_unstamped", "/cmd_vel"),
-        # ],
+        remappings=[
+            ("/diff_drive_controller/cmd_vel_unstamped", "/cmd_vel"),
+        ],
     )
 
     joint_state_broadcaster_spawner_node = Node(
@@ -106,8 +105,6 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
                               description='Absolute path to rviz config file'),
-        DeclareLaunchArgument(name='use_ros2_control', default_value='true',
-                             description='Flag to enable use_ros2_control'),
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner_node,
