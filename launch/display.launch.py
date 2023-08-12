@@ -3,18 +3,23 @@ from launch.substitutions import Command, LaunchConfiguration
 import launch_ros
 import os
 
+
 def generate_launch_description():
     package_name = "crab_bot"
 
-    pkg_share = launch_ros.substitutions.FindPackageShare(package=package_name).find(package_name)
-    default_model_path = os.path.join(pkg_share, 'description/robot.urdf.xacro')
-    default_rviz_config_path = os.path.join(pkg_share, 'config/urdf_config.rviz')
-    world_path=os.path.join(pkg_share, 'worlds/obstacles.world')
+    pkg_share = launch_ros.substitutions.FindPackageShare(
+        package=package_name).find(package_name)
+    default_model_path = os.path.join(
+        pkg_share, 'description/robot.urdf.xacro')
+    default_rviz_config_path = os.path.join(
+        pkg_share, 'config/urdf_config.rviz')
+    world_path = os.path.join(pkg_share, 'worlds/obstacles.world')
 
     robot_state_publisher_node = launch_ros.actions.Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'robot_description': Command(['xacro ', LaunchConfiguration('model')])}]
+        parameters=[{'robot_description': Command(
+            ['xacro ', LaunchConfiguration('model')])}]
     )
     joint_state_publisher_node = launch_ros.actions.Node(
         package='joint_state_publisher',
@@ -38,25 +43,27 @@ def generate_launch_description():
     )
 
     robot_localization_node = launch_ros.actions.Node(
-       package='robot_localization',
-       executable='ekf_node',
-       name='ekf_filter_node',
-       output='screen',
-       parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[os.path.join(pkg_share, 'config/ekf.yaml'),
+                    {'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     return launch.LaunchDescription([
         launch.actions.DeclareLaunchArgument(name='gui', default_value='True',
-                                            description='Flag to enable joint_state_publisher_gui'),
+                                             description='Flag to enable joint_state_publisher_gui'),
         launch.actions.DeclareLaunchArgument(name='model', default_value=default_model_path,
-                                            description='Absolute path to robot urdf file'),
+                                             description='Absolute path to robot urdf file'),
         launch.actions.DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
-                                            description='Absolute path to rviz config file'),
+                                             description='Absolute path to rviz config file'),
         launch.actions.DeclareLaunchArgument(name='use_ros2_control', default_value='false',
-                                            description='Flag to enable use_ros2_control'),
+                                             description='Flag to enable use_ros2_control'),
         launch.actions.DeclareLaunchArgument(name='use_sim_time', default_value='true',
-                                            description='Flag to enable use_sim_time'),
-        launch.actions.ExecuteProcess(cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so',world_path], output='screen'),
+                                             description='Flag to enable use_sim_time'),
+        launch.actions.ExecuteProcess(cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so',
+                                      '-s', 'libgazebo_ros_factory.so', world_path], output='screen'),
         joint_state_publisher_node,
         robot_state_publisher_node,
         spawn_entity,
