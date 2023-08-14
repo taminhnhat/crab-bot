@@ -14,6 +14,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     package_name = 'crab_bot'
+    log_level = LaunchConfiguration("log_level")
     use_sim_time = LaunchConfiguration("use_sim_time")
     use_ros2_control = LaunchConfiguration("use_ros2_control")
     pkg_share = get_package_share_directory(package_name)
@@ -27,7 +28,6 @@ def generate_launch_description():
 
     gazebo_params_file = os.path.join(
         pkg_share, 'config', 'gazebo_params.yaml')
-    gazebo_world_file = os.path.join(pkg_share, 'worlds', 'obstaces.world')
     # Include the Gazebo launch file, provided by the gazebo_ros package
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
@@ -82,6 +82,8 @@ def generate_launch_description():
 
     # Launch them all!
     return LaunchDescription([
+        DeclareLaunchArgument(name='log_level', default_value='info',
+                              description='Logging level'),
         DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
                               description='Absolute path to rviz config file'),
         DeclareLaunchArgument(name='use_ros2_control', default_value='true',
