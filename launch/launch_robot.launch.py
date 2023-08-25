@@ -24,7 +24,8 @@ def generate_launch_description():
     robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name="xacro")]),
         " ",
-        PathJoinSubstitution([pkg_share, "description", "robot.urdf.xacro"]),
+        PathJoinSubstitution(
+            [pkg_share, "crabbot_description", "robot.urdf.xacro"]),
     ])
 
     robot_description = {'robot_description': robot_description_content}

@@ -22,7 +22,8 @@ def generate_launch_description():
     default_rviz_config_path = os.path.join(pkg_share, 'config/main.rviz')
 
     # Create a robot_state_publisher node
-    xacro_file = os.path.join(pkg_share, 'description', 'robot.2wd.urdf.xacro')
+    xacro_file = os.path.join(
+        pkg_share, 'crabbot_description', 'robot.2wd.urdf.xacro')
     robot_description_config = Command(
         ['xacro ', xacro_file, ' use_ros2_control:=', use_ros2_control])
     params = {'robot_description': robot_description_config,

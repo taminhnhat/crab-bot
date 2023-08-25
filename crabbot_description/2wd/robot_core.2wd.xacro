@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:include filename="$(find crab_bot)/description/macros/inertial_macros.xacro" />
-    <xacro:include filename="$(find crab_bot)/description/macros/wheel.macros.xacro"/>
+    <xacro:include filename="$(find crab_bot)/crabbot_description/macros/inertial_macros.xacro" />
+    <xacro:include filename="$(find crab_bot)/crabbot_description/macros/wheel.macros.xacro"/>
 
     <xacro:property name="chassis_length" value="0.225"/>
     <xacro:property name="chassis_width" value="0.153"/>
@@ -13,10 +13,14 @@
     <xacro:property name="wheel_length" value="0.04"/>
     <xacro:property name="wheel_mass" value="0.5"/>
     <xacro:property name="wheel_separation" value="0.205"/>
-    <xacro:property name="wheel_offset_x" value="0.073"/>
+    <xacro:property name="wheel_offset_x" value="0"/>
     <xacro:property name="wheel_offset_y" value="${wheel_separation/2}"/>
     <xacro:property name="wheel_offset_z" value="0.0"/>
     <xacro:property name="chassis_offset_z" value="0.02"/>
+    <xacro:property name="caster_wheel_radius" value="0.02"/>
+    <xacro:property name="caster_wheel_mass" value="0.1"/>
+    <xacro:property name="caster_wheel_offset_x" value="0.073"/>
+    <xacro:property name="caster_wheel_offset_z" value="${-wheel_radius + caster_wheel_radius + 0.001}"/>
 
 
     <material name="white">
@@ -90,17 +94,74 @@
         <material>Gazebo/White</material>
     </gazebo>
 
-    <xacro:wheel prefix="front_right">
+    <xacro:wheel prefix="right">
         <origin xyz="${wheel_offset_x} ${-wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0" />
     </xacro:wheel>
-    <xacro:wheel prefix="rear_right">
-        <origin xyz="${-wheel_offset_x} ${-wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0" />
-    </xacro:wheel>
-    <xacro:wheel prefix="rear_left">
-        <origin xyz="${-wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0" />
-    </xacro:wheel>
-    <xacro:wheel prefix="front_left">
+    <xacro:wheel prefix="left">
         <origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0" />
     </xacro:wheel>
+
+    <!-- Caster wheel link -->
+
+    <joint name="front_caster_wheel_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="front_caster_wheel"/>
+        <origin xyz="${caster_wheel_offset_x} 0 ${caster_wheel_offset_z}"/>
+    </joint>
+
+
+    <link name="front_caster_wheel">
+        <visual>
+            <geometry>
+                <sphere radius="${caster_wheel_radius}"/>1
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="${caster_wheel_radius}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_sphere mass="${caster_wheel_mass}" radius="${caster_wheel_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
+    </link>
+
+    <gazebo reference="front_caster_wheel">
+        <material>Gazebo/Blue</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
+    </gazebo>
+
+
+    <joint name="back_caster_wheel_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="back_caster_wheel"/>
+        <origin xyz="${-caster_wheel_offset_x} 0 ${caster_wheel_offset_z}"/>
+    </joint>
+
+
+    <link name="back_caster_wheel">
+        <visual>
+            <geometry>
+                <sphere radius="${caster_wheel_radius}"/>1
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="${caster_wheel_radius}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_sphere mass="${caster_wheel_mass}" radius="${caster_wheel_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
+    </link>
+
+    <gazebo reference="back_caster_wheel">
+        <material>Gazebo/Blue</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
+    </gazebo>
 
 </robot>
