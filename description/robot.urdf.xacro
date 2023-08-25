@@ -1,31 +1,13 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="crab_bot">
 
-    <xacro:include filename="robot_core.xacro" />
+    <xacro:include filename="4wd/robot_core.4wd.xacro" />
 
-    <xacro:arg name="use_ros2_control" default="false"/>
-    <xacro:arg name="use_sim" default="true"/>
+    <xacro:include filename="ros2_control.xacro" />
 
-    <xacro:if value="$(arg use_ros2_control)">
-        <xacro:if value="$(arg use_sim)">
-            <xacro:include filename="ros2_control.simulation.xacro" />
-        </xacro:if>
-        <xacro:unless value="$(arg use_sim)">
-            <!-- <xacro:include filename="$(find crab_bot)/description/diffbot.ros2_control.xacro" />
-            <xacro:diffbot_ros2_control name="DiffBot" prefix="" /> -->
-            <xacro:include filename="ros2_control.hardware.xacro" />
-        </xacro:unless>
-    </xacro:if>
-
-    <xacro:unless value="$(arg use_ros2_control)">
-        <xacro:include filename="gazebo_control.xacro" />
-    </xacro:unless>
-    
-    <!-- <xacro:include filename="gazebo_control.xacro" /> -->
-
-    <xacro:include filename="lidar.xacro" />
-    <!-- <xacro:include filename="camera.xacro" /> -->
-    <xacro:include filename="dept_camera.xacro" />
-    <xacro:include filename="imu.xacro" />
+    <xacro:include filename="accessories/lidar.xacro" />
+    <xacro:include filename="accessories/camera.xacro" />
+    <!-- <xacro:include filename="accessories/dept_camera.xacro" /> -->
+    <!-- <xacro:include filename="accessories/imu.xacro" /> -->
 
 </robot>

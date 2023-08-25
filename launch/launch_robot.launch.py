@@ -25,18 +25,16 @@ def generate_launch_description():
         PathJoinSubstitution([FindExecutable(name="xacro")]),
         " ",
         PathJoinSubstitution([pkg_share, "description", "robot.urdf.xacro"]),
-        " use_ros2_control:=true",
-        " use_sim:=false",
     ])
 
     robot_description = {'robot_description': robot_description_content}
-    controller_params_file = PathJoinSubstitution(
+    robot_controller = PathJoinSubstitution(
         [pkg_share, 'config', 'robot_controllers.yaml'])
 
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[robot_description, controller_params_file],
+        parameters=[robot_description, robot_controller],
         output="both",
     )
 

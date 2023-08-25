@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="crab_bot">
+
+    <xacro:include filename="4wd/robot_core.4wd.xacro" />
+
+    <xacro:arg name="use_ros2_control" default="false"/>
+
+    <xacro:if value="$(arg use_ros2_control)">
+        <xacro:include filename="4wd/ros2_control.4wd.xacro" />
+    </xacro:if>
+
+    <xacro:unless value="$(arg use_ros2_control)">
+        <xacro:include filename="4wd/gazebo_control.xacro" />
+    </xacro:unless>
+
+    <xacro:include filename="accessories/lidar.xacro" />
+    <!-- <xacro:include filename="accessories/camera.xacro" /> -->
+    <xacro:include filename="accessories/dept_camera.xacro" />
+    <!-- <xacro:include filename="accessories/imu.xacro" /> -->
+
+</robot>

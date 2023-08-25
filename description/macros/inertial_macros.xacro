@@ -31,8 +31,8 @@
             <xacro:insert_block name="origin"/>
             <mass value="${mass}" />
             <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
-                    iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
-                    izz="${(1/2) * mass * (radius*radius)}" />
+                    iyy="${(1/12) * mass * (radius*radius + length*length)}" iyz="0.0"
+                    izz="${(1/12) * mass * (radius*radius)}" />
         </inertial>
     </xacro:macro>
 

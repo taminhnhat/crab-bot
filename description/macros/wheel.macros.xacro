@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- WHEEL MACROS -->
+
+    <xacro:macro name="wheel" params= "prefix *joint_pose">
+        <link name="${prefix}_wheel">
+            <visual>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+                </geometry>
+                <material name="blue"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+                <geometry>
+                    <!-- <cylinder radius="${wheel_radius}" length="${wheel_length}"/> -->
+                    <sphere radius="${wheel_radius}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${wheel_mass}"/>
+                <inertia
+                    ixx="${wheel_mass / 12.0 * (3*wheel_radius*wheel_radius + wheel_length*wheel_length)}" ixy="0.0" ixz="0.0"
+                    iyy="${wheel_mass / 2.0 * (wheel_radius*wheel_radius + wheel_inner_radius*wheel_inner_radius)}" iyz="0.0"
+                    izz="${wheel_mass / 12.0 * (3*wheel_radius*wheel_radius + wheel_length*wheel_length)}"/>
+            </inertial>
+        </link>
+
+        <joint name="${prefix}_wheel_joint" type="continuous">
+            <parent link="base_link"/>
+            <child link="${prefix}_wheel"/>
+            <xacro:insert_block name="joint_pose"/>
+            <axis xyz="0 1 0" rpy="0 0 0"/>
+            <!-- <limit effort= "100" velocity="4.0"/>
+            <dynamics damping="0.0" friction="0.0"/> -->
+        </joint>
+
+        <gazebo reference="${prefix}_wheel">
+            <material>Gazebo/Black</material>
+            <mu1 value="1.0"/>
+            <mu2 value="0.5"/>
+            <kp value="10000000.0" />
+            <kd value="1.0" />
+            <fdir1 value="1 0 0"/>
+        </gazebo>
+    </xacro:macro>
+
+</robot>
