@@ -34,15 +34,15 @@ def generate_launch_description():
         parameters=[params]
     )
 
-    gazebo_params_file = os.path.join(
-        pkg_share, 'config', 'gazebo_params.yaml')
-    # Include the Gazebo launch file, provided by the gazebo_ros package
-    gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
-        launch_arguments={
-            'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items()
-    )
+    # gazebo_params_file = os.path.join(
+    #     pkg_share, 'config', 'gazebo_params.yaml')
+    # # Include the Gazebo launch file, provided by the gazebo_ros package
+    # gazebo = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([os.path.join(
+    #         get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
+    #     launch_arguments={
+    #         'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items()
+    # )
     # Gazebo server
     gzserver = ExecuteProcess(
         cmd=['gzserver',
