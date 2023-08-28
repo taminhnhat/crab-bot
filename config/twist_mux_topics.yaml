@@ -16,6 +16,10 @@ twist_mux:
         topic   : cmd_vel_joy
         timeout : 0.5
         priority: 100
+      websocket:
+        topic   : ws_vel
+        timeout : 0.5
+        priority: 50
       keyboard:
         topic   : key_vel
         timeout : 0.5
