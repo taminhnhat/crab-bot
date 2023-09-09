@@ -16,7 +16,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     parameters = [{
-        'frame_id': 'base_link',
+        'frame_id': 'camera_link',
         'subscribe_depth': True,
         'subscribe_odom_info': True,
         'approx_sync': False}]
@@ -34,14 +34,14 @@ def generate_launch_description():
             parameters=parameters,
             remappings=remappings),
 
-        Node(
-            package='rtabmap_slam', executable='rtabmap', output='screen',
-            parameters=parameters,
-            remappings=remappings,
-            arguments=['-d']),
+        # Node(
+        #     package='rtabmap_slam', executable='rtabmap', output='screen',
+        #     parameters=parameters,
+        #     remappings=remappings,
+        #     arguments=['-d']),
 
-        Node(
-            package='rtabmap_viz', executable='rtabmap_viz', output='screen',
-            parameters=parameters,
-            remappings=remappings),
+        # Node(
+        #     package='rtabmap_viz', executable='rtabmap_viz', output='screen',
+        #     parameters=parameters,
+        #     remappings=remappings),
     ])
