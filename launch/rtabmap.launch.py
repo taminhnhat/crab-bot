@@ -34,11 +34,11 @@ def generate_launch_description():
             parameters=parameters,
             remappings=remappings),
 
-        # Node(
-        #     package='rtabmap_slam', executable='rtabmap', output='screen',
-        #     parameters=parameters,
-        #     remappings=remappings,
-        #     arguments=['-d']),
+        Node(
+            package='rtabmap_slam', executable='rtabmap', output='screen',
+            parameters=parameters,
+            remappings=remappings,
+            arguments=['-d']),
 
         # Node(
         #     package='rtabmap_viz', executable='rtabmap_viz', output='screen',
