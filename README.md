@@ -1,0 +1,1 @@
+ros2 run rtabmap_odom rgbd_odometry rgb/image:=camera/color/image_raw rgb/camera_info:=camera/color/camera_info depth/image:=camera/aligned_depth_to_color/image_raw

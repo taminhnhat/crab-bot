@@ -19,9 +19,11 @@ def generate_launch_description():
         'frame_id': 'camera_link',
         'subscribe_depth': True,
         'subscribe_odom_info': True,
-        'approx_sync': False}]
+        'wait_imu_to_init':True,
+        'approx_sync': False,}]
 
     remappings = [
+        ('imu', '/test/imu'),
         ('rgb/image', '/camera/color/image_raw'),
         ('rgb/camera_info', '/camera/color/camera_info'),
         ('depth/image', '/camera/aligned_depth_to_color/image_raw')]
