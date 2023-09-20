@@ -106,11 +106,11 @@ def launch_setup(context, params, param_name_suffix=''):
             output='screen',
             arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level' + param_name_suffix)],
             emulate_tty=True),
-        # launch_ros.actions.Node(
-        #     package='tf2_ros',
-        #     executable='static_transform_publisher',
-        #     name='base_link_to_camera_link_d435',
-        #     arguments=['0','0','0.109','0','0','0','base_link','camera_link']),
+        launch_ros.actions.Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='base_link_to_camera_link_d435',
+            arguments=['0','0','0.109','0','0','0','base_link','camera_link']),
     ]
 
 def generate_launch_description():

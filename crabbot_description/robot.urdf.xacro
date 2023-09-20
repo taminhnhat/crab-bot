@@ -5,9 +5,9 @@
 
     <xacro:include filename="ros2_control.xacro" />
 
-    <xacro:include filename="accessories/lidar.xacro" />
+    <!-- <xacro:include filename="accessories/lidar.xacro" /> -->
     <!-- <xacro:include filename="accessories/camera.xacro" /> -->
-    <xacro:include filename="accessories/dept_camera.xacro" />
-    <xacro:include filename="accessories/imu.xacro" />
+    <!-- <xacro:include filename="accessories/dept_camera.xacro" /> -->
+    <!-- <xacro:include filename="accessories/imu.xacro" /> -->
 
 </robot>

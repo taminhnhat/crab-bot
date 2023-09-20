@@ -23,7 +23,7 @@ def generate_launch_description():
         'approx_sync': False,}]
 
     remappings = [
-        ('imu', '/test/imu'),
+        ('imu', '/imu'),
         ('rgb/image', '/camera/color/image_raw'),
         ('rgb/camera_info', '/camera/color/camera_info'),
         ('depth/image', '/camera/aligned_depth_to_color/image_raw')]
@@ -42,8 +42,8 @@ def generate_launch_description():
             remappings=remappings,
             arguments=['-d']),
 
-        # Node(
-        #     package='rtabmap_viz', executable='rtabmap_viz', output='screen',
-        #     parameters=parameters,
-        #     remappings=remappings),
+        Node(
+            package='rtabmap_viz', executable='rtabmap_viz', output='screen',
+            parameters=parameters,
+            remappings=remappings),
     ])
