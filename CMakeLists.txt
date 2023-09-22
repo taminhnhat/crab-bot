@@ -36,7 +36,7 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY config crabbot_description launch worlds
+  DIRECTORY config crabbot_description launch rtabmap worlds
   DESTINATION share/${PROJECT_NAME}
 )
 
